@@ -1,0 +1,23 @@
+# Dataset (download from Kaggle, see data/README.md)
+data/*
+!data/README.md
+
+# Downloaded third-party papers (copyrighted) and unpublished manuscript drafts
+literature/papers/
+paper/
+archive/
+
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+*.tmp
+.vscode/
