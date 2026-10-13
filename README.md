@@ -81,6 +81,7 @@ This project asks *why*. Instead of starting from a model, we:
 ├── literature/
 │   └── reading_list.md               annotated reading list (44 papers)
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
@@ -128,3 +129,8 @@ https://www.kaggle.com/datasets/ealaxi/paysim1
 ## Citation
 
 The paper is under preparation. Please contact the authors before citing this work.
+
+## License
+
+The code in this repository is released under the [MIT License](LICENSE).
+The PaySim dataset is not part of this repository and is subject to its own terms on Kaggle.
