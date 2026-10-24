@@ -21,3 +21,6 @@ desktop.ini
 ~$*
 *.tmp
 .vscode/
+
+# cached model runs from the notebook (rebuilt automatically)
+results/cache/
