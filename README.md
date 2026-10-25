@@ -19,7 +19,8 @@ This project asks *why*. Instead of starting from a model, we:
 3. turn the supported hypotheses into features,
 4. evaluate a **one-line rule**, **logistic regression**, **random forest** and **histogram gradient boosting** under
    random, group-aware, chronological and expanding-window protocols, and
-5. repeat the experiments **without the balance attributes**, which the dataset documentation advises against using.
+5. repeat the experiments **without the balance attributes**, which the dataset documentation advises against using, and
+6. build a **pair-aware two-stage detector** from the two-step fraud pattern (H7) that needs no balance attribute at all.
 
 ![Workflow](figures/fig1_workflow.png)
 
@@ -34,6 +35,14 @@ This project asks *why*. Instead of starting from a model, we:
 - With all features, the best models reach **F1 0.998–0.9999**, stable across five chronological folds.
 - **Without the balance attributes, the best F1 falls to 0.42 (random split) and 0.37 (chronological split).**
   Near-perfect PaySim results depend almost entirely on simulator-specific balance information.
+- Using only information available **before** the transaction (no `newbalance…` columns) still gives **F1 0.995–0.9999**,
+  so the results are not driven by post-transaction leakage.
+- A **pair feature** (an earlier TRANSFER with the same step and amount) marks 99.0% of fraudulent cash-outs
+  (0.002% of legitimate ones). A **two-stage detector** (flag the cash-out, then link back to its transfer) reaches
+  **F1 0.98 without any balance attribute**: PaySim fraud can be found through **two separate simulator shortcuts**.
+- Tuning gradient boosting without balance attributes helps only a little (at most +0.15 F1); one good feature helps more.
+- Effect sizes (Cramér's V, rank-biserial r) and bootstrap 95% confidence intervals are reported for all hypotheses and
+  main models.
 
 | Split | Model | F1 with balance | F1 without balance | PR-AUC without balance |
 |---|---|---|---|---|
@@ -43,6 +52,12 @@ This project asks *why*. Instead of starting from a model, we:
 | Chronological | Logistic regression | 0.9993 | 0.0000 | 0.084 |
 | Chronological | Gradient boosting (L2 = 1) | 0.9999 | 0.2538 | 0.255 |
 | Chronological | Random forest | 0.9999 | 0.3730 | 0.315 |
+
+| Without balance attributes (gradient boosting, L2 = 1) | Chronological F1 | Group-aware F1 |
+|---|---|---|
+| Type, amount, is_whole, hour | 0.2538 | – |
+| + pair feature (decision time) | 0.7065 | 0.7046 |
+| + pair feature, two-stage detector | **0.9832** | **0.9809** |
 
 ### Hypotheses
 
@@ -76,7 +91,8 @@ This project asks *why*. Instead of starting from a model, we:
 │   └── balance_comparison.py         results with vs. without balance attributes
 ├── results/
 │   ├── expanding_window_results.csv  5-fold chronological evaluation
-│   └── balance_comparison_results.json
+│   ├── balance_comparison_results.json
+│   └── cache/                        saved model runs, created by the notebook (not in git)
 ├── figures/                          paper figures (PNG/PDF) and draw.io sources
 ├── literature/
 │   └── reading_list.md               annotated reading list (44 papers)
@@ -101,11 +117,12 @@ Download the dataset as described in [`data/README.md`](data/README.md) and plac
 
 | What | How |
 |---|---|
-| Full analysis and figures | open `notebooks/research.ipynb` and run all cells (about 1 hour; needs ~8 GB RAM) |
+| Full analysis and figures | open `notebooks/research.ipynb` and run all cells (about 1 hour the first time, a few minutes later because slow runs are saved in `results/cache/`; needs ~8 GB free RAM) |
 | H7 and group-aware split | `python scripts/two_step_fraud_check.py` (about 5 minutes) |
 | With vs. without balance attributes | `python scripts/balance_comparison.py` (about 30 minutes) |
 
 All experiments use `random_state=42`. Tested with Python 3.14, pandas 3.0, scikit-learn 1.9.
+If you change a model or feature in a cached section, delete the matching file in `results/cache/` before re-running.
 
 ## Figures
 
