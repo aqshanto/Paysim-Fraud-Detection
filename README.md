@@ -135,7 +135,9 @@ If you change a model or feature in a cached section, delete the matching file i
 | 5. Ablation | `figures/fig5_ablation.png` |
 | 6. Rule vs. machine learning | `figures/fig6_rule_vs_ml.png` |
 | 7. Feature importance | `figures/fig7_feature_importance.png` |
+| 8. F1 by feature set (with/without balance, pair feature) | `figures/fig8_feature_sets.png` |
 
+Figures 2, 3, 5, 6, 7 and 8 are drawn in the notebook; Figures 1 and 4 are diagrams.
 The `.drawio` files can be opened and edited at [app.diagrams.net](https://app.diagrams.net).
 
 ## Dataset
